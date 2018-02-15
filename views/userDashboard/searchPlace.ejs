@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Unovoyage</title>
+        <style type="text/css">
+          li{
+                font-weight: bold;
+            }
+            h1{
+                text-decoration-color: #000000;
+                font-weight: bold;
+                color: #000000;
+
+            }
+            body {
+                background: url("/images/slide1.jpg") no-repeat center center fixed;
+                background-size: cover;
+                 font-size: 16px;
+                    font-family: 'Lato', sans-serif;
+                font-weight: 300;
+                align-items: center;
+                align-content: center;
+                         margin: 0;
+                color: #666;
+}
+    input {
+background-color: rgba(0,0,0,0.1);
+width=80%;
+padding: 5px;
+margin: auto;
+width: 350px;
+text-decoration-color: black;
+font-weight: bold;
+color: #000000;
+}
+::-webkit-input-placeholder { /* Chrome */
+  color: black;
+  font-weight: bold;
+}
+:-ms-input-placeholder { /* IE 10+ */
+  color: black;
+  font-weight: bold;
+}
+::-moz-placeholder { /* Firefox 19+ */
+  color: black;
+ opacity: 1;
+ font-weight: bold;
+}
+:-moz-placeholder { /* Firefox 4 - 18 */
+  color: black;
+  opacity: 1;
+  font-weight: bold;
+}
+        </style>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/stylesheets/main.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+        <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700|Lato:400,100,300,700,900' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="/stylesheets/animate.css">
+       
+        <script
+              src="https://code.jquery.com/jquery-2.2.4.min.js"
+              integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+              crossorigin="anonymous">
+        </script>
+    
+
+    </head>
+
+
+    <body>
+
+      <nav class="navbar navbar-inverse">
+        <div class="container">
+            <div class="navbar-header">
+               <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-nav-demo" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                 <% if(!currentUser) {%>
+                    <a class="navbar-brand" href="/">Unovoyage</a> <!--For not logged in send to Home Page -->
+                <% } else {%>
+                     <% if(currentUser.isAdmin) {%>
+                    <a class="navbar-brand" href="/places">Unovoyage</a>
+                    <% }else if(currentUser.isManager) { %>
+                    <a class="navbar-brand" href="/places/manager">Unovoyage</a><!--If logged in send to Dashboard  -->
+                    <% } else {%>
+                    <a class="navbar-brand" href="/places/user">Unovoyage</a> <!--If logged in send to Dashboard  -->
+                    <% } %>
+               <% } %>
+
+            </div>
+            <div class="collapse navbar-collapse" id="bs-nav-demo">
+                <ul class="nav navbar-nav navbar-right">
+                 <% if(!currentUser) {%>
+                    <li><a href="/adminLogin">Log In   <i class="fa fa-user"></i></a></li>
+                    <li><a href="/register">Sign Up   <i class="fa fa-user-plus"></i></a></li>
+                <% } else {%>
+                    <% if(currentUser.isAdmin) {%>
+                    <li><a href="/places"><%= currentUser.username %> <i class="fa fa-user"></i> </a></li>
+                    <% }else if(currentUser.isManager) { %>
+                    <li><a href="/places/manager"><%= currentUser.username %> <i class="fa fa-user"></i> </a></li>                    
+                    <% } else {%>
+                    <li><a href="/edit"><%= currentUser.username %> <i class="fa fa-user"></i> </a></li>
+                <% } %>
+                    <li><a href="/logout"> Log out  <i class="fa fa-sign-out" aria-hidden="true"></i>
+                </a></li>
+                <% } %>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+     <div class="container">
+            <% if(error && error.length>0 ) {%>
+                <div class="alert alert-danger" role="alert"> <%= error %> </div>
+            <% } 
+            if(success && success.length>0 ) {%>
+                <div class="alert alert-success" role="alert"> <%= success %> </div>
+            <% } %>
+    </div>
+        
+
+<div style="width: 100%;">
+    <div style="float:left; width: 60% ;overflow:auto;">
+        <center>
+         <img src="<%= val.image %>" class="image-responsive" style="width: 150px; height: 150px;">
+            <div class="caption">         
+                <h2><a><%= val.name %></a></h2>
+                <p style="color: white;"><%= val.description %></p>
+                <p style="color: white;">Submitted by <%= val.author.username %></p>
+            </div>
+       </center>
+    </div>
+    <div style="float:right; width:30%; text-align:center; margin-top:35px;">
+      <div >
+        <% var flag=0; %>
+        <% for(var i=0 ;i<currentUser.interested.length;i++){ %>
+            <% if(currentUser.interested[i].equals(val._id)) { %>
+                <% flag=1; %>
+            <% } %>
+        <% } %>
+        <%if(flag===1){ %>
+            <form action="/places/showInterestedUsers/<%= val._id %>" method="post">                    
+                <button class="btn btn-info btn-lg">View Already Interested Users</button>
+            </form>  
+        <% } else{ %>
+            <form action="/places/interested/<%= val._id %>" method="post">                    
+                <button class="btn btn-info btn-lg">Mark Interested</button>
+            </form>
+        <% } %>
+    </div>
+    <br>
+    <div>
+        <% var flag=0; %>
+        <% for(var i=0 ;i<currentUser.confirmed.length;i++){ %>
+            <% if(currentUser.confirmed[i].equals(val._id)) { %>
+                <% flag=1; %>
+            <% } %>
+        <% } %>
+        <%if(flag===1){ %>
+            <form action="/places/showConfirmedUsers/<%= val._id %>" method="post">                    
+                <button class="btn btn-info btn-lg">View Already Confirmed Users</button>
+            </form>
+        <% } else{ %>
+            <form action="/places/confirm/<%= val._id %>" method="post">
+                <span style="color:white;">Enter date of booking :- </span>  <br>
+                <input type="date" name="date" min="2017-01-10" style="color:white;" ><br><br>
+                <input type="submit" id="confirm" value="Confirm" class="btn btn-info btn-lg"><br><br>                    
+            </form> 
+        <% } %>   
+    </div>
+    <br>
+
+</div>
+<br>
+<br>
+<br>
+<p>
+    <div class = "container" style="margin-top: 220px;">
+    <div class="well" style="color: black; background: rgba(255, 255, 255, .3); text-align: center;">
+        <div class="text-right">
+            <a href="/places/<%= val._id %>/comments/new" class="btn btn-success">Add new Comment</a>
+        </div>
+        <hr>
+        <% val.comments.forEach(function(cmnt) {%>
+            <div class="row">
+                <div class="col-md-12">
+                    <strong><%= cmnt.author.username %></strong>
+                    <span class="pull-right"><%= moment(cmnt.created).fromNow() %></span>
+                    <p><%= cmnt.text %></p>
+                    <% if(currentUser && cmnt.author.id.equals(currentUser._id)) {  %>
+                        <a style="width:25%" class="btn btn-xs btn-warning" href="/places/<%= val._id %>/comments/<%= cmnt._id %>/edit">Edit</a>
+                        <form action="/places/<%= val._id %>/comments/<%= cmnt._id %>?_method=DELETE" method="POST" id="deletecm">
+                            <input style="width:25%" type="submit" class="btn btn-xs btn-danger" value="Delete">
+                        </form>
+                    <% } %>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+</div>
+
+<% include ../partials/footer %>

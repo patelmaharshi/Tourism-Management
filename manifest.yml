@@ -1,0 +1,4 @@
+applications:
+- name: first-try
+  random-route: true
+  memory: 128M

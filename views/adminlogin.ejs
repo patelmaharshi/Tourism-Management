@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Unovoyage</title>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/stylesheets/main.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700|Lato:400,100,300,700,900' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="/stylesheets/animate.css">
+  <link rel="stylesheet" href="/stylesheets/style2.css">
+
+        
+    </head>
+    <body>
+    <style type="text/css">
+        li{
+            font-weight: bold;
+        }
+       body {
+                background: url("../images/agra.jpg") no-repeat center center fixed;
+                background-size: cover;
+                 font-size: 16px;
+                    font-family: 'Lato', sans-serif;
+                font-weight: 300;
+                align-items: center;
+                align-content: center;
+                         margin: 0;
+                color: #666;
+        }
+    </style>
+      <!--   <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/">Unovoyage</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class=" nav navbar-nav navbar-right">
+                    <% if(!currentUser) {%>
+                         <li><a href="/login">Login</a></li>
+                        <li><a href="/register">Sign Up</a></li>
+                    <% } else {%>
+                        <li><a href="/"><%= currentUser.username %></a></li>
+                        <li><a href="/logout">Log out</a></li>
+                    <% } %>
+                    </ul>
+                </div>
+            </div>
+        </nav> -->
+
+ <nav class="navbar navbar-inverse">
+        <div class="container">
+            <div class="navbar-header">
+               <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-nav-demo" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                 <% if(!currentUser) {%>
+                    <a class="navbar-brand" href="/">Unovoyage</a> <!--For not logged in send to Home Page -->
+                <% } else {%>
+                     <% if(currentUser.isAdmin) {%>
+                    <a class="navbar-brand" href="/places">Unovoyage</a>
+                    <% }else if(currentUser.isManager) { %>
+                    <a class="navbar-brand" href="/places/manager">Unovoyage</a><!--If logged in send to Dashboard  -->
+                    <% } else {%>
+                    <a class="navbar-brand" href="/places/user">Unovoyage</a> <!--If logged in send to Dashboard  -->
+                    <% } %>
+               <% } %>
+
+            </div>
+           
+            <div class="collapse navbar-collapse" id="bs-nav-demo">
+                <ul class="nav navbar-nav navbar-right">
+                 <% if(!currentUser) {%>
+                    <li><a href="/adminLogin">Log In   <i class="fa fa-user"></i></a></li>
+                    <li><a href="/register">Sign Up   <i class="fa fa-user-plus"></i></a></li>
+                <% } else {%>
+                    <% if(currentUser.isAdmin) {%>
+                    <li><a href="/places"><%= currentUser.username %> <i class="fa fa-user"></i> </a></li>
+                    <% }else if(currentUser.isManager) { %>
+                    <li><a href="/places/manager"><%= currentUser.username %> <i class="fa fa-user"></i> </a></li>                    
+                    <% } else {%>
+                    <li><a href="/edit"><%= currentUser.username %> <i class="fa fa-user"></i> </a></li>
+                <% } %>
+                    <li><a href="/logout"> Log out  <i class="fa fa-sign-out" aria-hidden="true"></i>
+                </a></li>
+                <% } %>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+        <div class="container">
+            <% if(error && error.length>0 ) {%>
+            <div class="alert alert-danger" role="alert"> <%= error %> </div>
+            <% } 
+            if(success && success.length>0 ) {%>
+            <div class="alert alert-success" role="alert"> <%= success %> </div>
+            <% } %>
+        </div>
+
+
+<div class="container">
+    <div class="top">
+
+      <form method="post" action="/adminlogin">
+      <div class="login-box animated fadeInUp">
+       
+      <%if(status == 1 ){%>
+             <p style="color: red; font-weight: bold; padding-bottom: 1px;"> Invalid Credentials</p>
+            <%} else if(updationstatus==3){%>
+             <p style="font-weight: bold; padding-bottom: 1px;" >Please Log in again</p>
+            <%}%>
+          
+      <div class="box-header">
+        <h2 class="text-muted">Log In</h2>
+      </div>
+
+      <label for="username">Username</label>
+      <br/>
+      <input type="text" id="username" name="username" required >
+      <br/>
+      <label for="password">Password</label>
+      <br/>
+      <input type="password" id="password" name="password" required>
+      <br/>
+      <button type="submit">Login</button>
+      <br/>
+    </div>
+  </form>
+  </div>
+  </div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.simpleWeather/3.1.0/jquery.simpleWeather.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script>
+  $(document).ready(function () {
+      $('#logo').addClass('animated fadeInDown');
+      $("input:text:visible:first").focus();
+  });
+  $('#username').focus(function() {
+    $('label[for="username"]').addClass('selected');
+  });
+  $('#username').blur(function() {
+    $('label[for="username"]').removeClass('selected');
+  });
+  $('#password').focus(function() {
+    $('label[for="password"]').addClass('selected');
+  });
+  $('#password').blur(function() {
+    $('label[for="password"]').removeClass('selected');
+  });
+</script>
+</html>
+
